@@ -1,9 +1,3 @@
-# markdown editor效果
-
-不废话，先上效果图
-
-![](assets/20250317_181323_image.png)
-
 # markdown editor安装
 
 在vscode扩展中搜索"markdown editor"，找到以下图标并安装：
@@ -69,76 +63,52 @@ h6 {
 	font-style: italic;
 }
 
-p {
+body {
 	font-family: "Consolas", "等线";
 	font-style: italic;
+}
+
+li {
+	font-family: "Consolas", "等线";
 	font-size: 0.8rem;
+}
+
+pre {
+	border-radius: 0.375rem;
+	font-size: 0.98rem;
+}
+
+p {
 	line-height: 1.5;
+	font-size: 0.8rem;
 }
 
 a {
-	font-family: "Consolas", "等线";
-	font-style: italic;
-	font-size: 0.8rem;
 	text-decoration: none;
-	color: #0366d6;
+	font-size: 0.8rem;
+}
+
+ul {
+	padding-left: 2rem;
+	font-size: 0.8rem;
+}
+
+ol {
+	padding-left: 2rem;
+	font-size: 0.8rem;
+}
+
+table {
+	border-radius: 0.375rem;
+	font-size: 0.8rem;
 }
 
 blockquote {
-	font-family: "Consolas", "等线";
-	font-style: italic;
-	font-size: 0.8rem;
 	color: #6a737d;
 	padding: 0 1rem;
 	margin-left: 0;
 	margin-right: 0;
 	border-left: 0.25rem solid #dfe2e5;
-}
-
-ul,
-ol {
-	font-family: "Consolas", "等线";
-	font-style: italic;
-	padding-left: 2rem;
-	font-size: 0.8rem;
-}
-
-li {
-	font-family: "Consolas", "等线";
-	font-style: italic;
-	margin-bottom: 0.25rem;
-	font-size: 0.8rem;
-}
-
-li>p {
-	font-family: "Consolas", "等线";
-	font-style: italic;
-	margin-bottom: 0.5rem;
-	font-size: 0.8rem;
-}
-
-pre {
-	font-family: "Consolas", "等线";
-	font-style: italic;
-	background-color: #444446;
-	border-radius: 0.375rem;
-	font-size: 0.9rem;
-	padding: 3px;
-}
-
-code {
-	font-family: "Consolas", "等线";
-	font-style: italic;
-	background-color: inherit;
-	border-radius: 0.375rem;
-	font-size: 0.8rem;
-	padding: 3px;
-}
-
-table {
-	font-family: "Consolas", "等线";
-	font-style: italic;
-	border-radius: 0.375rem;
 	font-size: 0.8rem;
 }
 ```
