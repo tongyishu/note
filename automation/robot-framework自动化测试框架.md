@@ -35,7 +35,7 @@ robot -l NONE -r NONE -o NONE mytest.robot
 robot --loglevel=DEBUG -s ovs myconf.robot
 ```
 
-options是选项，其中-l NONE是禁用html的log输出，-r NONE是禁用html的报告输出，-o NONE是禁用XML的日志输出，--loglevel指定日志的级别，-s指定测试套（测试用例所在目录）。paths是一般是项目的配置文件，也可以是测试用例文件，均为.robot后缀。使用robot --help可以查看更多的帮助信息。
+options是选项，其中`-l NONE`是禁用html的log输出，`-r NONE`是禁用html的报告输出，`-o NONE`是禁用XML的日志输出，`--loglevel`指定日志的级别，`-s`指定测试套（测试用例所在目录）。paths是一般是项目的配置文件，也可以是测试用例文件，均为.robot后缀。使用`robot --help`可以查看更多的帮助信息。
 
 # 工程目录
 
