@@ -268,6 +268,9 @@ testpmd> rx_vlan add/rm <VLAN_ID> <PORT_ID>
 testpmd> vlan set inner tpid <TP_ID> <PORT_ID>
 testpmd> vlan set outer tpid <TP_ID> <PORT_ID>
 
+# 用户报文配置vlan_id
+testpmd> tx_vlan set <PORT_ID> <VLAN_ID>
+
 # 1、untagged的帧自动添加pvid;
 # 2、qinq时配置外层pvid, 内层pvid由用户报文携带
 testpmd> tx_vlan set pvid <PORT_ID> <VLAN_ID> on|off
@@ -317,7 +320,6 @@ cmd_tx_vlan_set_pvid_parsed
 - 查看端口信息
 
 ```bash
-# 查看端口信息
 testpmd> show port info   <PORT_ID>
 testpmd> show port stats  <PORT_ID>
 testpmd> show port xstats <PORT_ID>
