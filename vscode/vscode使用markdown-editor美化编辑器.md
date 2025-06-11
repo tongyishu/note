@@ -44,7 +44,7 @@ markdown editor是基于[vditor](https://github.com/Vanessa219/vditor)实现的�
 
 # markdown editor图表
 
-markdown editor支持多种图表，包括KaTeX/Mermaid/Graphviz/ECharts/abc.js等。这里着重介绍vditor内部集成的mermaid（https://mermaid.nodejs.cn）。mermaid版本为 `8.8.0`，支持思维导图/流程图/甘特图/饼图/类图/时序图等多种图表，示例如下：
+markdown editor支持多种图表，包括KaTeX/Mermaid/Graphviz/ECharts/abc.js等。这里着重介绍vditor内部集成的[mermaid](https://mermaid.nodejs.cn)。mermaid版本为 `8.8.0`，支持思维导图/流程图/甘特图/饼图/类图/时序图等多种图表，示例如下：
 
 - 思维导图
 
