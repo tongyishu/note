@@ -63,35 +63,112 @@ https://www.intel.cn/content/www/cn/zh/developer/articles/technical/ovs-dpdk-dat
 
 ovs的报文转发流程如下，共涉及三种类型的流表：
 
-![](assets/20250321_003043_image.png)
+```mermaid
+flowchart LR
+    id0(NIC)                 --RX-->   id1(EMC)
+    id1(EMC)                 --miss--> id2(Datapath Classifier)
+    id2(Datapath Classifier) --miss--> id3(Ofproto Classifier)
+    id1(EMC)                 --hit-->  id4(Execute Action)
+    id2(Datapath Classifier) --hit-->  id4(Execute Action)
+    id3(Ofproto Classifier)  --hit-->  id4(Execute Action)
+    id4(Execute Action)      --TX-->   id0(NIC)
+```
 
-1、Ofproto Classifier（openflow），又称慢速路径，本质上是openflow流表在ovs中的存在形式，由Controller控制器通过openflow协议下发，或由ovs-ofctl命令手动下发。每个网桥都有自己的openflow流表，相关数据结构有`struct classifier`（openflow流表，位于`struct oftable`结构体中，包含若干个子表），`struct cls_subtable`（openflow子表，相同掩码的表项放在同一个子表里面），`struct rule`（openflow表项）
-
-2、Datapath Classifier（dpcls），又称快速路径，datapath的一种缓存技术，每个（入）端口都有自己的dpcls表，相关的数据结构有`struct dpcls`（dpcls表，包含若干个子表），struct dpcls_subtable（dpcls子表，相同掩码的表项放在同一个子表中），`struct dpcls_rule`（dpcls表项）
-
-3、Exact Match Cache（emc），精确匹配表，datapath的更加快速的一种缓存技术，每个pmd线程都有自己的emc表，相关的数据结构有`struct emc_cache`（emc表），`struct emc_entry`（emc表项）
+1. Ofproto Classifier（openflow），又称慢速路径，本质上是openflow流表在ovs中的存在形式，由Controller控制器通过openflow协议下发，或由ovs-ofctl命令手动下发。每个网桥都有自己的openflow流表，相关数据结构有`struct classifier`（openflow流表，位于`struct oftable`结构体中，包含若干个子表），`struct cls_subtable`（openflow子表，相同掩码的表项放在同一个子表里面），`struct rule`（openflow表项）
+2. Datapath Classifier（dpcls），又称快速路径，datapath的一种缓存技术，每个（入）端口都有自己的dpcls表，相关的数据结构有`struct dpcls`（dpcls表，包含若干个子表），struct dpcls_subtable（dpcls子表，相同掩码的表项放在同一个子表中），`struct dpcls_rule`（dpcls表项）
+3. Exact Match Cache（emc），精确匹配表，datapath的更加快速的一种缓存技术，每个pmd线程都有自己的emc表，相关的数据结构有`struct emc_cache`（emc表），`struct emc_entry`（emc表项）
 
 需要注意的是：`struct miniflow`用于从报文中提取特征值，比如IP、MAC等，struct flow由miniflow扩展而来（包含报文的特征值），用于匹配openflow的`struct rule`，openflow的表项存放在`struct rule`中，不存放在`struct flow`中！！！
 
 查表流程：
 
-![](assets/20250321_003103_image.png)
+```bash
+pmd_thread_main
+    dp_netdev_process_rxq_port
+        dp_netdev_input
+            dp_netdev_input__
+                dfc_processing
+                    miniflow_extract // 从报文中提取特征值，存到miniflow中
+                    emc_lookup // 查找emc表
+                fast_path_processing
+                    dpcls_lookup // emc未命中的情况下，查找dpcls表
+                handle_packet_upcall
+                    miniflow_expand // 将提取的miniflow扩展到struct flow中，用于报文上送
+                    dp_netdev_upcall
+                        upcall_cb
+                            process_upcall
+                                upcall_xlate
+                                    xlate_actions
+                                        rule_dpif_lookup_from_table // dpcls未命中，查找openflow流表
+```
 
 # ovs action翻译与执行流程
 
 一条openflow流表下发到ovs后，会存放在`struct rule`结构中，报文上送时，会翻译`struct rule`中的actions，并将action应用于报文。流程如下（以mod_nw_tos为例）：
 
-![](assets/20250321_003128_image.png)
+```bash
+handle_packet_upcall
+    dp_netdev_upcall
+        upcall_cb
+            process_upcall
+                upcall_xlate
+                    xlate_actions
+                        do_xlate_actions // 查找openflow流表，提取actions
+                            xlate_output_action
+                                compose_output_action
+                                    compose_output_action__
+                                        xlate_commit_actions
+                                            commit_set_nw_action // 将ctx->flow中的actions拷贝到ctx->odp_actions
+                                                commit_set_ipv4_action
+                                                    commit
+                                                        commit_masked_set_action
+
+    dp_netdev_execute_actions
+        odp_execute_actions // 根据actions修改要转发报文的tos字段
+            odp_execute_masked_set_action
+                odp_set_ipv4
+```
 
 # ovs 流表卸载流程
 
 pmd_thread_main为dpdk的pmd线程，dp_netdev_flow_offload_main为ovs的流表卸载线程。二者为多对一的关系，通过mpsc（mutilple producer single consumer）队列联系在一起。
 
-![](assets/20250321_003152_image.png)
+```mermaid
+flowchart LR
+    id0(network)                      --packets-->           id1(pmd_thread_main)
+    id0(network)                      --packets-->           id2(pmd_thread_main)
+    id0(network)                      --packets-->           id3(pmd_thread_main)
+    id1(pmd_thread_main)              --mpsc_queue_insert--> id4(mpsc_queue)
+    id2(pmd_thread_main)              --mpsc_queue_insert--> id4(mpsc_queue)
+    id3(pmd_thread_main)              --mpsc_queue_insert--> id4(mpsc_queue)
+    id4(mpsc_queue)                   --mpsc_queue_pop-->    id5(dp_net_dev_flow_offload_main)
+    id5(dp_net_dev_flow_offload_main) --rte_flow_crete-->    id6(NIC)
+```
 
 调用流程如下：
 
-![](assets/20250321_003203_image.png)
+```bash
+pmd_thread_main
+    dp_netdev_process_rxq_port
+        dp_netde_input
+            dp_netdev_input__
+                fast_path_processing
+                    dp_netdev_flow_add
+                        queue_netdev_flow_put
+                            dp_netdev_append_offload
+                                mpsc_queue_insert
+
+dp_netdev_flow_offload_main
+    mpsc_queue_pop
+    dp_offload_flow
+        dp_netdev_flow_offload_put
+            netdev_offload_dpdk_flow_put
+                netdev_offload_dpdk_add_flow
+                    netdev_offload_dpdk_actions
+                        netdev_offload_dpdk_flow_create
+                            netdev_dpdk_rte_flow_create
+                                rte_flow_create
+```
 
 # ovs-appctl常用命令
 
