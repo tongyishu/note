@@ -1,3 +1,17 @@
+# markdown editor介绍
+
+markdown editor是基于vditor（https://github.com/Vanessa219/vditor）实现的一个vscode插件。支持以下特性：
+
+- 所见即所得（WYSIWYG, What you see is what you get）
+- vscode编辑器与网页视图之间的更改自动同步
+- 复制Markdown/HTML内容
+- 上传/粘贴/拖放的图片将自动保存到资源文件夹
+- 多主题支持
+- 快捷键功能
+- 多种编辑模式：即时渲染模式/所见即所得模式/分屏模式
+- Markdown 扩展功能
+- 支持多种图表，包括KaTeX/Mermaid/Graphviz/ECharts/abc.js
+
 # markdown editor安装
 
 在vscode扩展中搜索"markdown editor"，找到以下图标并安装：
@@ -27,6 +41,119 @@
 点击markdown editor工具栏中的"..."，找到"大纲"选项并点击，就可以打开大纲预览
 
 ![](assets/20250317_181618_image.png)
+
+# markdown editor图表
+
+markdown editor支持多种图表，包括KaTeX/Mermaid/Graphviz/ECharts/abc.js等。这里着重介绍vditor内部集成的mermaid（https://mermaid.nodejs.cn）。mermaid版本为 `8.8.0`，支持思维导图/流程图/甘特图/饼图/类图/时序图等多种图表，示例如下：
+
+- 思维导图
+
+```mindmap
+- 前端技术学习路线
+  - 基础核心
+    - HTML
+      - 语义化标签
+      - 无障碍设计
+      - 元信息（Meta）
+    - CSS
+      - 盒模型
+      - 布局（Flex/Grid）
+      - 响应式设计
+      - 预处理器（Sass/PostCSS）
+    - JavaScript
+      - 数据类型与作用域
+      - 异步（Promise/Async）
+      - DOM/BOM 操作
+      - ES6+ 新特性（模块化/类）
+  - 进阶框架
+    - Vue
+      - 响应式原理
+      - 组件化开发
+      - Vue Router
+      - Pinia 状态管理
+    - React
+      - JSX 语法
+      - 虚拟 DOM
+      - Hooks（useState/useEffect）
+      - Redux Toolkit
+```
+
+- 流程图
+
+```mermaid
+graph LR
+    开始 --> 输入数据
+    输入数据 --> 验证数据
+    验证数据 -->|有效| 处理数据
+    验证数据 -->|无效| 错误提示
+    处理数据 --> 输出结果
+    输出结果 --> 结束
+```
+
+- 甘特图
+
+```mermaid
+gantt
+    title 任务详情
+    dateFormat  YYYY-MM-DD
+    section 张三
+    任务1 : a1, 2019-01-01, 30d
+    任务2 : after a1, 20d
+    section 李四
+    任务3 : 2019-01-12, 12d
+    任务4 : 24d
+```
+
+- 饼图
+
+```mermaid
+pie title 成绩分布图
+    "600分以上" : 15
+    "300~600分" : 386
+    "300分以下" : 85
+```
+
+- 类图
+
+```mermaid
+classDiagram
+    Animal <|-- Duck
+    Animal <|-- Fish
+    Animal <|-- Zebra
+    class Animal {
+        +int age
+        +String gender
+        +isMammal()
+        +mate()
+    }
+    class Duck{
+        +String beakColor
+        +swim()
+        +quack()
+    }
+    class Fish{
+        -int sizeInFeet
+        -canEat()
+    }
+    class Zebra{
+        +bool is_wild
+        +run()
+    }
+
+```
+
+- 时序图
+
+```mermaid
+sequenceDiagram
+    participant 用户
+    participant 前端
+    participant 后端
+    用户->>前端: 提交表单
+    前端->>后端: 发送请求（JSON）
+    后端->>前端: 返回验证结果
+    前端->>用户: 显示提示
+```
 
 # 我的自定义css
 
