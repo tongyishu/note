@@ -82,7 +82,7 @@ flowchart LR
 
 查表流程：
 
-```bash
+```c
 pmd_thread_main
     dp_netdev_process_rxq_port
         dp_netdev_input
@@ -106,7 +106,7 @@ pmd_thread_main
 
 一条openflow流表下发到ovs后，会存放在`struct rule`结构中，报文上送时，会翻译`struct rule`中的actions，并将action应用于报文。流程如下（以mod_nw_tos为例）：
 
-```bash
+```c
 handle_packet_upcall
     dp_netdev_upcall
         upcall_cb
@@ -142,12 +142,12 @@ flowchart LR
     id2(pmd_thread_main)              --mpsc_queue_insert--> id4(mpsc_queue)
     id3(pmd_thread_main)              --mpsc_queue_insert--> id4(mpsc_queue)
     id4(mpsc_queue)                   --mpsc_queue_pop-->    id5(dp_net_dev_flow_offload_main)
-    id5(dp_net_dev_flow_offload_main) --rte_flow_crete-->    id6(NIC)
+    id5(dp_net_dev_flow_offload_main) --rte_flow_create-->   id6(NIC)
 ```
 
 调用流程如下：
 
-```bash
+```c
 pmd_thread_main
     dp_netdev_process_rxq_port
         dp_netde_input
