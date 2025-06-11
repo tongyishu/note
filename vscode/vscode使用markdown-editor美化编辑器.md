@@ -1,6 +1,6 @@
 # markdown editor介绍
 
-markdown editor是基于vditor（https://github.com/Vanessa219/vditor）实现的一个vscode插件。支持以下特性：
+markdown editor是基于[vditor](https://github.com/Vanessa219/vditor)实现的一个vscode插件。支持以下特性：
 
 - 所见即所得（WYSIWYG, What you see is what you get）
 - vscode编辑器与网页视图之间的更改自动同步
@@ -48,34 +48,23 @@ markdown editor支持多种图表，包括KaTeX/Mermaid/Graphviz/ECharts/abc.js�
 
 - 思维导图
 
-```mindmap
-- 前端技术学习路线
-  - 基础核心
-    - HTML
-      - 语义化标签
-      - 无障碍设计
-      - 元信息（Meta）
-    - CSS
-      - 盒模型
-      - 布局（Flex/Grid）
-      - 响应式设计
-      - 预处理器（Sass/PostCSS）
-    - JavaScript
-      - 数据类型与作用域
-      - 异步（Promise/Async）
-      - DOM/BOM 操作
-      - ES6+ 新特性（模块化/类）
-  - 进阶框架
-    - Vue
-      - 响应式原理
-      - 组件化开发
-      - Vue Router
-      - Pinia 状态管理
-    - React
-      - JSX 语法
-      - 虚拟 DOM
-      - Hooks（useState/useEffect）
-      - Redux Toolkit
+```mermaid
+mindmap
+  root((学习计划))
+    编程语言
+      Python
+        基础语法
+        数据分析库（Pandas/NumPy）
+      JavaScript
+        ES6+ 新特性
+        异步编程（Promise/Async）
+    前端框架
+      Vue.js
+        组件化开发
+        Vue Router
+      React
+        JSX 语法
+        状态管理（Redux）
 ```
 
 - 流程图
