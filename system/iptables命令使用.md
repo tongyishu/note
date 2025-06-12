@@ -6,7 +6,18 @@ iptables工具和ip6tables工具主要用于建立、维护和检查Kernel中IPv
 
 在介绍表之前，需要先介绍一下链的概念。Kernel定义了5条链（INPUT、PREROUTING、FORWARD、POSTROUTING 、OUT），分别对应netfilter的5个挂载点（netfilter在L3的包处理流程中，添加了对应的hook函数）。
 
-![](assets/20250317_151411_image.png)
+```mermaid
+flowchart LR
+    id0(network)     --> id1(PREROUTING)
+    id1(PREROUTING)  --> id2(ROUTE)
+    id2(ROUTE)       --> id3(FORWARD)
+    id2(ROUTE)       --> id4(INPUT)
+    id3(FORWARD)     --> id5(POSTROUTING)
+    id4(INPUT)       --> id6(localhost)
+    id6(localhost)   --> id7(OUTPUT)
+    id7(OUTPUT)      --> id5(POSTROUTING)
+    id5(POSTROUTING) --> id8(network)
+```
 
 | **链名称** | **挂载点**                                         |
 | ---------------- | -------------------------------------------------------- |
