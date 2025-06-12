@@ -4,7 +4,12 @@
 
 tee 音译为字母 T，数据从左边（标准输入）流入，从右边（标准输出）和下面（文件）分流输出，字母 T 的形状很形象地说明了数据的流向，故将该命令命名为 tee。数据流向过程如下图所示：
 
-![](assets/20250319_000928_image.png)
+```mermaid
+flowchart LR
+    id0(ls -l)           --pipeline--> id1(tee)
+    id1(tee file.txt)    -->           id2(stdout)
+    id1(tee file.txt)    -->           id3(file.txt)
+```
 
 # 命令参数
 
