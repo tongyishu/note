@@ -4,7 +4,18 @@ Telemetry（遥测技术），一种远程的从物理设备或虚拟设备上�
 
 Telemetry网络模型如下：
 
-![](assets/20250320_231955_image.png)
+```mermaid
+flowchart LR
+    id0(网络设备)
+    id3(分析器)
+    id1(采集器)
+    id2(控制器)
+
+    id1 --> id3
+    id3 --> id2
+    id0 --上报监控数据--> id1
+    id2 --NETCONF等方式下发配置--> id0
+```
 
 * 网络设备：被监控的设备（eg.交换机/路由器/虚拟网卡/物理网卡）
 * 采集器：用于接收和保存网络设备上报的监控数据
@@ -22,7 +33,11 @@ Telemetry的实现方式有以下4种：
 
 基于gRPC的Telemetry技术主要用来**采集设备的接口流量统计、CPU、告警等数据** 。gRPC网络采用C/S模型，各节点单独上送采集器。
 
-![](assets/20250320_232014_image.png)
+```mermaid
+flowchart LR
+    id0(gRPC Server) <--> id1(gRPC Client)
+```
+
 
 dial-in模式：设备作为gRPC服务端，采集器作为gRPC客户端。由采集器主动向设备发起gRPC连接，拉取需要采集的数据信息。
 

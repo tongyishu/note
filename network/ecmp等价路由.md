@@ -83,4 +83,28 @@ brctl delbr br0
 
 veth5的抓包结果如下，可以看到，发往192.168.2.0/24网段的报文，被veth1和veth3均等的进行了路由，根据目的IP的不同进行了哈希选路。
 
-![](assets/20250321_122456_image.png)
+```bash
+[root@localhost ~]# tcpdump -i veth5 -nn
+dropped privs to tcpdump
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on veth5, link-type EN10MB (Ethernet), capture size 262144 bytes
+21:41:39.017658 IP 172.16.1.11 > 192.168.2.0: ICMP echo request, id 12656, seq 1, length 64
+21:41:40.020847 IP 172.16.1.13 > 192.168.2.1: ICMP echo request, id 12657, seq 1, length 64
+21:41:41.023779 IP 172.16.1.13 > 192.168.2.2: ICMP echo request, id 12658, seq 1, length 64
+21:41:42.027017 IP 172.16.1.13 > 192.168.2.3: ICMP echo request, id 12659, seq 1, length 64
+21:41:43.030066 IP 172.16.1.13 > 192.168.2.4: ICMP echo request, id 12660, seq 1, length 64
+21:41:44.032794 IP 172.16.1.13 > 192.168.2.5: ICMP echo request, id 12661, seq 1, length 64
+21:41:45.035663 IP 172.16.1.11 > 192.168.2.6: ICMP echo request, id 12662, seq 1, length 64
+21:41:46.038367 IP 172.16.1.11 > 192.168.2.7: ICMP echo request, id 12663, seq 1, length 64
+21:41:47.040999 IP 172.16.1.11 > 192.168.2.8: ICMP echo request, id 12664, seq 1, length 64
+21:41:48.044157 IP 172.16.1.11 > 192.168.2.9: ICMP echo request, id 12665, seq 1, length 64
+21:41:49.047382 IP 172.16.1.11 > 192.168.2.10: ICMP echo request, id 12666, seq 1, length 64
+21:41:50.050220 IP 172.16.1.13 > 192.168.2.11: ICMP echo request, id 12667, seq 1, length 64
+21:41:51.053438 IP 172.16.1.11 > 192.168.2.12: ICMP echo request, id 12668, seq 1, length 64
+21:41:52.056216 IP 172.16.1.13 > 192.168.2.13: ICMP echo request, id 12669, seq 1, length 64
+21:41:53.058966 IP 172.16.1.13 > 192.168.2.14: ICMP echo request, id 12670, seq 1, length 64
+21:41:54.061708 IP 172.16.1.13 > 192.168.2.15: ICMP echo request, id 12671, seq 1, length 64
+21:41:55.064907 IP 172.16.1.11 > 192.168.2.16: ICMP echo request, id 12672, seq 1, length 64
+21:41:56.068305 IP 172.16.1.11 > 192.168.2.17: ICMP echo request, id 12673, seq 1, length 64
+21:41:57.071592 IP 172.16.1.13 > 192.168.2.18: ICMP echo request, id 12674, seq 1, length 64
+```

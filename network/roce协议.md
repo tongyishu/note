@@ -42,9 +42,45 @@ IB
 
 # InfiniBand
 
-![](assets/20250322_203534_image.png)
+一个简单的IB（InfiniBand，直译为"无限带宽"）组网如下，其中HCA/TCA为IB的专有硬件：
 
-IB（InfiniBand，直译为"无限带宽"），部署图如上所示（HCA/TCA为IB的专有硬件），各个节点的信含义如下：
+```mermaid
+flowchart TD
+    id0(HCA)
+    id3(HCA)
+    id4(TCA)
+    id5(TCA)
+    id6(Gateway)
+    id7(Gateway)
+    id8(Subnet Manager)
+    idb(Processor Node)
+    idd(Consoles)
+    ide(RAID)
+    idf(Storage Subsystem)
+    idg(Switch)
+    idj(Switch)
+    idk(Ethernet)
+    idl(Fibre Channel)
+
+    idg --- idj
+
+    idd --- id0
+    idb --- id3
+    ide --- id4
+    idf --- id5
+    idk --- id6
+    idl --- id7
+
+    id0 --- idg
+    id3 --- idj
+    id4 --- idg
+    id5 --- idj
+    id6 --- idj
+    id7 --- idj
+    id8 --- idg
+```
+
+上图各个节点的信含义如下：
 
 * HCA（Host Channel Adapters）：负责将主机与RDMA网络连接的硬件网卡
 * TCA（Target Channel Adapters）：用于存储设备的硬件网卡

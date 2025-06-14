@@ -4,7 +4,29 @@ GTS(Generic Traffic Shaping，通用流量整形)，限制某类流量的流出�
 
 # gts流程
 
-![](assets/20250319_212300_image.png)
+```mermaid
+flowchart LR
+    id0{分类}
+    id1{流出}
+    id2(GTS缓冲队列)
+    id3("漏斗
+         or
+         令牌桶
+    ")
+    id4("非匀速报文
+        pkt1, pkt2, ..., pktN
+    ")
+    id5("匀速报文
+        pkt1, pkt2, ..., pktN
+    ")
+
+    id0 --> id1
+    id0 --> id2
+    id2 --> id3
+    id3 --> id1
+    id4 --> id0
+    id1 --> id5
+```
 
 当报文到达网络接口时，首先对报文进行分类，按照以下几种情况进行处理：
 
