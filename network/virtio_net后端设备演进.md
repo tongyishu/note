@@ -54,26 +54,12 @@ qemu virtio  ------->  vhost-kernel  ------->  vhost-user  ------->  vdpa
 以QEMU virtio为例：
 
 ```mermaid
-flowchart TD
-    id0("VM虚拟机
-  
-         send发包")
-    id1("VM的virtio_net前端驱动
-  
-         1、数据放入virtqueue; 2、触发VM_exit")
-    id2("宿主机内核KVM
-  
-         1、捕获VM_exit; 2、ioctl通知QEMU进程")
-    id3("QEMU进程的virtio_net后端设备
-  
-         1、接收通知; 2、从virtqueue中提取数据，写宿主机tap设备")
-    id4("宿主机内核/dev/net/tun设备")
-    id5("物理网卡
-
-        发送至外部网络")
-    id0 --VM内核协议栈--> id1
-    id1 --> id2
-    id2 --> id3
-    id3 --> id4
-    id4 --宿主机内核协议栈-->id5
+sequenceDiagram
+    vm 应用程序->>vm virtio_net前端驱动: 1、send发包
+    vm virtio_net前端驱动->>宿主机内核: 2、将数据放入virtqueue，触发VM_exit
+    宿主机内核->>宿主机内核: 3、捕获VM_exit
+    宿主机内核->>qemu virtio_net后端设备: 4、ioctl通知virtio_net后端
+    qemu virtio_net后端设备->>qemu virtio_net后端设备: 5、接收通知，从virtqueue中提取数据
+    qemu virtio_net后端设备->>宿主机内核: 6、写宿主机/dev/net/tun设备
+    宿主机内核->>物理网卡: 7、通过宿主机内核协议栈，将数据写到物理网卡
 ```
